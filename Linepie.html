@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="windows-1252">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    </head>
+    <body>
+        <script>
+            
+            function generateData(num, sum) {
+                var dataArray = [];
+                for(var i=0; i<(num-1); i++){
+                    var randomNumber = Math.round((Math.random() * sum));
+                    dataArray.push(randomNumber);
+                    sum = sum -randomNumber;
+                }
+                dataArray.push(sum);
+                return dataArray;
+            }
+            
+            function init(){
+                var colorArray = ["red", "orange", "yellow", "green", "blue"];
+                var svg = d3.select("body").append("svg")
+                        .attr("class", "linepie")
+                        .attr("height", "500")
+                        .attr("width", "1000");
+                for(var i=0; i<5; i++){
+                    svg.append("rect")
+                            .attr("fill", colorArray[i]);
+                }
+            }
+            
+            function main(){
+                var data = generateData(5, 200);
+                var svg = d3.select(".linepie");
+                
+                var rect = svg.selectAll("rect").data(data);
+                
+                rect.enter().append("rect");
+                        
+                rect.attr("height", "40").transition()
+                        .duration(1000)
+                        .attr("x", function(d,i){
+                            var k = i;
+                            if(k===0){return 0;}
+                            var sum  = 0;
+                            for(var j=0; j<k; j++){
+                                sum += data[j];
+                            }
+                            return sum;
+                        })
+                        .attr("width", function(d){return d;});
+                
+            }
+            init();
+            main();
+            setInterval(function(){main();}, 3000);
+        </script>
+    </body>
+</html>
