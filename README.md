@@ -1,4 +1,4 @@
 Charts
 ======
 
-Diagramme zur Datenvisualisierung
+Charts for Data visualisation
