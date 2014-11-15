@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    </head>
+    <body>
+        <script>
+            function generateData(num, sum) {
+                var randomArray = [];
+                var gesamt = sum;
+                for(var i=0; i<num-1; i++) {
+                    var value = Math.random()*gesamt;
+                    gesamt = gesamt - value;
+                    randomArray.push(value);
+                }
+                randomArray.push(gesamt);
+                return randomArray;
+            }
+            
+            function init(){
+                
+                var svg = d3.select("body").append("svg")
+                    .attr("class", "crossingBorder")        
+                    .attr("width", "1000")
+                    .attr("height", "500");
+                svg.append("g")
+                    .attr("class", "rectContainer");
+                svg.append("g")
+                        .attr("class", "circleContainer");
+                   
+                    
+            }
+            
+            function main(){
+                var data = generateData(5, 200);
+                var colors = ["red", "orange", "yellow", "blue"];
+                var svg = d3.select(".crossingBorder");
+                
+                var circle = svg.select(".circleContainer").selectAll("ellipse").data([data[2]]);
+                circle.enter().append("ellipse");
+                circle.attr("ry", "30")
+                        .attr("cx", "200")
+                        .attr("cy", "200")
+                        .attr("fill", "none")
+                        .attr("stroke", "green")
+                        .attr("stroke-width", "3")
+                        .transition()
+                        .duration(1000)
+                        .attr("rx", data[2]);
+                data.splice(2,1);
+                var rect = svg.select(".rectContainer").selectAll("rect").data(data);
+                rect.enter().append("rect");
+                rect.attr("height", "40")
+                        .attr("fill", function(d,i){return colors[i];})
+                        .transition()
+                        .duration(1000)
+                        .attr("width", function(d){return d;})
+                        .attr("x", function(d,i){
+                            if(i===0){
+                                return 200 - d - data[1];
+                            }
+                            if(i===1){
+                                return 200 - d;
+                            }
+                            if(i===2){
+                                return 200;
+                            }
+                            if(i===3){
+                                return 200 + data[2];
+                            }
+                })
+                        .attr("y", 200 - 20);
+                
+             
+                
+            }
+            init();
+            main();
+            setInterval(function(){main();}, 3000);
+        </script>
+    </body>
+    
+</html>
